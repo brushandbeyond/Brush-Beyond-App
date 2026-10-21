@@ -4,10 +4,30 @@ A kid-friendly learning platform for Brush & Beyond's art history lessons and
 step-by-step art tutorials, with filtering by era, artist, and difficulty,
 and a Premium tier for extensive deep-dive history episodes.
 
-**Nothing on this site is fetched live from brushbeyond.net or YouTube.**
-Every word, number, and stat is content I wrote once into these files — it
-won't drift or get overwritten by your manual updates elsewhere, but it also
-won't update itself. Edit the file, see the change.
+**Almost nothing on this site is fetched live from brushbeyond.net or
+YouTube.** Every word and number is content written into these files — edit
+the file, see the change. The one exception is the YouTube stats row on the
+home page (see below).
+
+## YouTube stats (auto-updating)
+
+The home page's "views on YouTube" and "educational videos made" numbers
+update themselves once a day:
+
+1. A GitHub Action ([.github/workflows/youtube-stats.yml](.github/workflows/youtube-stats.yml))
+   runs [scripts/update-youtube-stats.js](scripts/update-youtube-stats.js),
+   which asks the YouTube Data API for the channel's public stats and commits
+   them to `js/data/youtube-stats.json`.
+2. The home page reads that file live from GitHub, so the website **and** the
+   iOS app show new numbers without a redeploy or App Store update. If it
+   can't be loaded, the page falls back to the hand-typed numbers in `STATS`
+   at the top of [js/pages/home.js](js/pages/home.js).
+
+**One-time setup:** create a free YouTube Data API key (Google Cloud Console →
+enable "YouTube Data API v3" → Credentials → Create API key), add it under
+this repo's Settings → Secrets and variables → Actions as `YOUTUBE_API_KEY`,
+then run the workflow once from the Actions tab. "Countries reached" isn't
+public on YouTube, so it stays manual in `STATS`.
 
 ## Running it
 

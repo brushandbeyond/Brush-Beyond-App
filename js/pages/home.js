@@ -1,14 +1,64 @@
-// Quick-edit stats shown in the "fun facts" row below. Nothing on this page
-// is fetched live from brushbeyond.net or YouTube — these are plain numbers
-// you update by hand whenever you want them to change.
+// Stats shown in the "fun facts" row below. The YouTube numbers (views,
+// videos) update themselves: a daily GitHub Action writes them to
+// js/data/youtube-stats.json, and this page reads that file live from
+// GitHub — see scripts/update-youtube-stats.js. The values here are only
+// the fallback shown if that file can't be loaded (e.g. offline) or hasn't
+// been filled in yet. `countriesReached` isn't public on YouTube, so it
+// stays manual — check YouTube Studio > Analytics > Audience.
 const STATS = {
   videosMade: '120+',
   countriesReached: '30+',
-  // YouTube doesn't publicly expose a channel's all-time view count, so
-  // this is manual too — check YouTube Studio > Analytics > Overview and
-  // update it here.
   youtubeViews: '43,000+',
 };
+
+// Read live from GitHub so the iOS app picks up new numbers without an App
+// Store update; the bundled copy is the backup if GitHub is unreachable.
+const YOUTUBE_STATS_URLS = [
+  'https://raw.githubusercontent.com/brushandbeyond/Brush-Beyond-App/main/js/data/youtube-stats.json',
+  'js/data/youtube-stats.json',
+];
+
+let youtubeStatsPromise = null;
+
+function loadYoutubeStats() {
+  if (!youtubeStatsPromise) {
+    youtubeStatsPromise = (async () => {
+      for (const url of YOUTUBE_STATS_URLS) {
+        try {
+          const res = await fetch(url, { cache: 'no-cache' });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.viewCount != null) return data;
+        } catch {
+          // try the next source
+        }
+      }
+      return null;
+    })();
+  }
+  return youtubeStatsPromise;
+}
+
+// 43,817 -> "43,000+", 1,284,000 -> "1,200,000+": rounds down so the "+"
+// is always true, keeping two significant digits like the hand-typed stats.
+function roundedStat(n) {
+  if (n < 100) return String(n);
+  const step = 10 ** (Math.floor(Math.log10(n)) - 1);
+  return `${(Math.floor(n / step) * step).toLocaleString('en-US')}+`;
+}
+
+async function fillLiveStats(root) {
+  const data = await loadYoutubeStats();
+  if (!data) return;
+  const values = {
+    youtubeViews: roundedStat(data.viewCount),
+    videosMade: data.videoCount != null ? roundedStat(data.videoCount) : null,
+  };
+  for (const [key, value] of Object.entries(values)) {
+    const el = root.querySelector(`[data-stat="${key}"]`);
+    if (el && value) el.textContent = value;
+  }
+}
 
 function profileBannerHTML() {
   const profile = getProfile();
@@ -156,7 +206,7 @@ function renderHome(root) {
       <a class="big-card big-card--history" href="#/history">
         <span class="big-card__icon">🏛</span>
         <h2>Art History</h2>
-        <p>Meet the artists, movements, and stories behind famous works. In-depth, Premium deep-dives area available for the extra curious.</p>
+        <p>Meet the artists, movements, and stories behind famous works. In-depth, Premium deep-dives are available for the extra curious.</p>
         <span class="big-card__count">${historyCount} lessons</span>
       </a>
       <a class="big-card big-card--tutorial" href="#/tutorials">
@@ -168,9 +218,9 @@ function renderHome(root) {
     </section>
 
     <section class="fun-facts">
-      <div class="fun-fact"><strong>${STATS.videosMade}</strong><span>educational videos made</span></div>
+      <div class="fun-fact"><strong data-stat="videosMade">${STATS.videosMade}</strong><span>educational videos made</span></div>
       <div class="fun-fact"><strong>${STATS.countriesReached}</strong><span>countries reached</span></div>
-      <div class="fun-fact"><strong>${STATS.youtubeViews}</strong><span>views on YouTube</span></div>
+      <div class="fun-fact"><strong data-stat="youtubeViews">${STATS.youtubeViews}</strong><span>views on YouTube</span></div>
       <div class="fun-fact"><strong>100%</strong><span>kid-friendly</span></div>
     </section>
 
@@ -183,5 +233,6 @@ function renderHome(root) {
     </section>
   `;
 
+  fillLiveStats(root);
   maybeShowContinueWatchingPopup();
 }
