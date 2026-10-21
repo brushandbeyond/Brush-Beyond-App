@@ -39,20 +39,12 @@ function loadYoutubeStats() {
   return youtubeStatsPromise;
 }
 
-// 43,817 -> "43,000+", 1,284,000 -> "1,200,000+": rounds down so the "+"
-// is always true, keeping two significant digits like the hand-typed stats.
-function roundedStat(n) {
-  if (n < 100) return String(n);
-  const step = 10 ** (Math.floor(Math.log10(n)) - 1);
-  return `${(Math.floor(n / step) * step).toLocaleString('en-US')}+`;
-}
-
 async function fillLiveStats(root) {
   const data = await loadYoutubeStats();
   if (!data) return;
   const values = {
-    youtubeViews: roundedStat(data.viewCount),
-    videosMade: data.videoCount != null ? roundedStat(data.videoCount) : null,
+    youtubeViews: data.viewCount.toLocaleString('en-US'),
+    videosMade: data.videoCount != null ? data.videoCount.toLocaleString('en-US') : null,
   };
   for (const [key, value] of Object.entries(values)) {
     const el = root.querySelector(`[data-stat="${key}"]`);
