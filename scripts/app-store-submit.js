@@ -41,7 +41,7 @@ async function api(method, resource, body) {
   const text = await response.text();
   const json = text ? JSON.parse(text) : {};
   if (!response.ok) {
-    const details = (json.errors || []).map((e) => `${e.code}: ${e.title}${e.detail ? ' — ' + e.detail : ''}`).join('\n  ');
+    const details = (json.errors || []).map((e) => `${e.code}: ${e.title}${e.detail ? ' — ' + e.detail : ''}${e.meta?.associatedErrors ? '\n    ' + Object.values(e.meta.associatedErrors).flat().map((a) => `${a.code}: ${a.detail || a.title}`).join('\n    ') : ''}`).join('\n  ');
     throw new Error(`${method} ${resource} → HTTP ${response.status}\n  ${details}`);
   }
   return json;
