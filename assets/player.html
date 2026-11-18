@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Brush &amp; Beyond video</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;background:#fffdf9;font:16px system-ui;color:#201d29}
+    #player{width:100%;height:calc(100% - 36px);min-height:200px}
+    #watch-status{height:36px;margin:0;text-align:center;font-size:14px;line-height:36px}
+    #fallback{padding:20px;text-align:center}#fallback img{width:100%;max-height:65vh;object-fit:contain}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <p id="watch-status" role="status">Start the video to track your badge progress.</p>
+  <div id="fallback" hidden><img id="cover" alt="Video cover"><p>This video cannot play here right now. Please try again later.</p><a id="youtube-link" target="_blank" rel="noopener">Watch on YouTube</a></div>
+  <script src="../js/video/watchTracker.js"></script>
+  <script src="../js/video/player.js"></script>
+</body>
+</html>

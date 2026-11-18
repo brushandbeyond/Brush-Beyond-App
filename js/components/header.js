@@ -6,7 +6,7 @@ function profileChipHTML() {
   return `
     <a href="#/profile" data-nav-link="/profile" class="nav-profile">
       ${avatarHTML(profile.avatar, 'nav-profile__avatar')}
-      ${profile.nickname}
+      ${escapeHTML(profile.nickname)}
       <span class="nav-profile__badges">🏅 ${profile.badges.length}</span>
     </a>
   `;
@@ -16,6 +16,7 @@ function renderHeader(container) {
   container.innerHTML = `
     <header class="site-header">
       <div class="header-left main-nav">
+        <button type="button" class="app-back-btn" id="app-back-btn" aria-label="Go back to the previous app page">← Back</button>
         <div class="nav-dropdown">
           <button type="button" class="nav-dropdown__trigger" id="explore-trigger" data-nav-link="/history,/tutorials" aria-expanded="false">
             Explore Our Lessons <span class="nav-dropdown__caret">▾</span>
@@ -25,7 +26,6 @@ function renderHeader(container) {
             <a href="#/tutorials">🎨 Art Tutorials</a>
           </div>
         </div>
-        <a href="#/teachers" data-nav-link="/teachers">Our Teachers</a>
       </div>
 
       <a class="brand" href="#/" aria-label="Brush & Beyond — Home">
@@ -35,12 +35,13 @@ function renderHeader(container) {
 
       <div class="header-right main-nav">
         <span id="profile-chip-mount">${profileChipHTML()}</span>
-        <a href="#/premium" data-nav-link="/premium" class="nav-premium">${isPremium() ? '⭐ Premium' : 'Upgrade to Premium'}</a>
+        <a href="#/privacy" data-nav-link="/privacy">Privacy &amp; Help</a>
       </div>
     </header>
   `;
 
   const dropdown = container.querySelector('.nav-dropdown');
+  container.querySelector('#app-back-btn').addEventListener('click', navigateBack);
   const trigger = container.querySelector('#explore-trigger');
   const menu = container.querySelector('#explore-menu');
 
@@ -60,11 +61,6 @@ function renderHeader(container) {
 
   document.addEventListener('click', (e) => {
     if (!menu.hidden && !dropdown.contains(e.target)) closeMenu();
-  });
-
-  window.addEventListener('bb:premium-changed', () => {
-    const premiumLink = container.querySelector('.nav-premium');
-    if (premiumLink) premiumLink.textContent = isPremium() ? '⭐ Premium' : 'Upgrade to Premium';
   });
 
   window.addEventListener('bb:profile-changed', () => {

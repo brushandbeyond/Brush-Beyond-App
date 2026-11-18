@@ -16,7 +16,6 @@
 //   artist       primary artist / subject
 //   era          art historical era or movement
 //   difficulty   1-5, see js/data/difficulty.js
-//   premium      true = gated behind Brush & Beyond Premium (extensive/deep-dive)
 //   duration     display string, only set when known for certain
 //   videoId      YouTube video id for the lesson's main video, or null.
 //                For history lessons this is the only video source. For
@@ -52,7 +51,6 @@ const LESSONS = [
     artist: 'Frida Kahlo',
     era: 'Modern Art (20th Century Mexico)',
     difficulty: 2,
-    premium: false,
     videoId: 'RUOGYKEq6cE',
     description:
       'Meet Frida Kahlo and discover how she turned her own life story into bold, unforgettable self-portraits.',
@@ -66,7 +64,6 @@ const LESSONS = [
     artist: 'Frida Kahlo',
     era: 'Modern Art (20th Century Mexico)',
     difficulty: 3,
-    premium: false,
     videoId: '2MYJj8s_WdU',
     videoFile: null,
     duration: '7:16',
@@ -119,7 +116,6 @@ const LESSONS = [
     artist: 'David Hockney',
     era: 'Contemporary Art',
     difficulty: 2,
-    premium: false,
     videoId: '_Ebm3pzxDbk',
     description:
       "Explore David Hockney's colorful, dreamlike landscapes and his love of bright, bold color.",
@@ -129,17 +125,16 @@ const LESSONS = [
   {
     id: 'hockney-collage',
     title: "Hockney's Photo Collage",
-    type: 'tutorial',
+    type: 'history',
     artist: 'David Hockney',
     era: 'Contemporary Art',
     difficulty: 3,
-    premium: false,
     videoId: 'mx3Pcowy1Ro',
     videoFile: null,
     // Video confirmed on the channel, but its transcript hasn't been pulled
     // yet, so `materials` / `steps` are left out rather than guessed.
     description:
-      "Make your own photo collage inspired by David Hockney's playful, puzzle-like compositions.",
+      "Explore David Hockney's photo collages and his playful, puzzle-like compositions.",
   },
   {
     id: 'hockney-swimming-pool',
@@ -148,7 +143,6 @@ const LESSONS = [
     artist: 'David Hockney',
     era: 'Contemporary Art',
     difficulty: 2,
-    premium: false,
     videoId: 'aHFYDQyP_6M',
     description:
       "Dive into David Hockney's famous swimming pool paintings and how he captured sunny California light.",
@@ -164,7 +158,6 @@ const LESSONS = [
     artist: 'Gustav Klimt',
     era: 'Art Nouveau & Symbolism',
     difficulty: 2,
-    premium: false,
     videoId: 'u5C1VmP9rgY',
     description:
       "Discover Gustav Klimt's shimmering, pattern-covered paintings and his love of gold leaf.",
@@ -178,7 +171,6 @@ const LESSONS = [
     artist: 'Gustav Klimt',
     era: 'Art Nouveau & Symbolism',
     difficulty: 3,
-    premium: false,
     videoId: 'BZLBRhwrdBs',
     videoFile: null,
     duration: '11:15',
@@ -238,7 +230,6 @@ const LESSONS = [
     artist: 'René Magritte',
     era: 'Surrealism',
     difficulty: 2,
-    premium: false,
     videoId: '8QyBN5Uouzw',
     description:
       "Step into René Magritte's strange, wonderful world where umbrellas float and apples hide faces.",
@@ -252,7 +243,6 @@ const LESSONS = [
     artist: 'René Magritte',
     era: 'Surrealism',
     difficulty: 3,
-    premium: false,
     videoId: 'uBHHitq-xiA',
     videoFile: null,
     duration: '13:55',
@@ -305,7 +295,6 @@ const LESSONS = [
     artist: 'James Rizzi',
     era: 'Pop Art',
     difficulty: 1,
-    premium: false,
     videoId: 'SWris9h_Mn8',
     description:
       "Tour James Rizzi's fun, colorful cartoon-style buildings and see how art can be silly and joyful.",
@@ -321,7 +310,6 @@ const LESSONS = [
     artist: 'Yayoi Kusama',
     era: 'Contemporary Art',
     difficulty: 1,
-    premium: false,
     videoId: 'Cp2ZJoiVc5Q',
     description:
       'Meet Yayoi Kusama and her endless, mesmerizing polka dots that cover entire rooms and pumpkins.',
@@ -335,7 +323,6 @@ const LESSONS = [
     artist: 'Yayoi Kusama',
     era: 'Contemporary Art',
     difficulty: 3,
-    premium: false,
     videoId: '2VRjGfwnEjI',
     videoFile: null,
     duration: '7:55',
@@ -390,7 +377,6 @@ const LESSONS = [
     artist: 'Vincent van Gogh',
     era: 'Post-Impressionism',
     difficulty: 2,
-    premium: false,
     videoId: '3kNVpAWIBsk',
     description:
       "Swirl through the night sky of Van Gogh's most famous painting and learn what inspired it.",
@@ -404,7 +390,6 @@ const LESSONS = [
     artist: 'Vincent van Gogh',
     era: 'Post-Impressionism',
     difficulty: 2,
-    premium: false,
     videoId: 'AqGAYvhST00',
     description:
       'A humble wooden chair becomes a masterpiece — see how Van Gogh found beauty in everyday objects.',
@@ -420,7 +405,6 @@ const LESSONS = [
     artist: 'Rembrandt van Rijn',
     era: 'Dutch Golden Age (Baroque)',
     difficulty: 3,
-    premium: true,
     videoId: 'ryTsLBbRI0Y',
     description:
       "Take an extensive, deep-dive tour through Rembrandt's real house and studio in Amsterdam.",
@@ -436,7 +420,6 @@ const LESSONS = [
     artist: 'Street Artists of Valparaíso',
     era: 'Street Art & Muralism',
     difficulty: 2,
-    premium: false,
     videoId: 'HB5jfxw8m74',
     description:
       "Explore the hillside city of Valparaíso, Chile, where entire streets are covered in vibrant murals.",
@@ -452,7 +435,6 @@ const LESSONS = [
     artist: 'Roy Lichtenstein',
     era: 'Pop Art',
     difficulty: 2,
-    premium: false,
     videoId: 'CDrU68HyBlk',
     description:
       "Discover how Roy Lichtenstein turned comic-book panels and dots into gallery-worthy pop art.",
@@ -466,7 +448,6 @@ const LESSONS = [
     artist: 'Roy Lichtenstein',
     era: 'Pop Art',
     difficulty: 3,
-    premium: false,
     videoId: 'i37bQul_U4M',
     videoFile: null,
     duration: '7:25',
@@ -520,7 +501,6 @@ const LESSONS = [
     artist: 'Claude Monet',
     era: 'Impressionism',
     difficulty: 2,
-    premium: false,
     videoId: 'jgWMSQOMPWM',
     description:
       'Watch sailboats shimmer on the water as we explore how Monet captured light with quick brushstrokes.',
@@ -534,7 +514,6 @@ const LESSONS = [
     artist: 'Claude Monet',
     era: 'Impressionism',
     difficulty: 2,
-    premium: false,
     videoId: 'XuW9GN4ymuI',
     description:
       "Stroll through Monet's famous water-lily gardens at Giverny and see what inspired his paintings.",
@@ -550,7 +529,6 @@ const LESSONS = [
     artist: 'Ben Nicholson',
     era: 'Abstract Modernism',
     difficulty: 3,
-    premium: false,
     videoId: '9GJZByYygB8',
     description:
       'See how Ben Nicholson broke everyday objects into simple shapes and lines.',
@@ -566,7 +544,6 @@ const LESSONS = [
     artist: 'Amedeo Modigliani',
     era: 'Modernism',
     difficulty: 2,
-    premium: false,
     videoId: 'eMqgy8ipqd4',
     description:
       "Meet the elegant, elongated portraits of Amedeo Modigliani and his distinct, dreamy style.",
@@ -580,7 +557,6 @@ const LESSONS = [
     artist: 'Amedeo Modigliani',
     era: 'Modernism',
     difficulty: 3,
-    premium: false,
     videoId: 'Nv0Ddo0k-3k',
     videoFile: null,
     duration: '11:42',
@@ -629,17 +605,16 @@ const LESSONS = [
   {
     id: 'otani-monster-workshop',
     title: "Otani's Monster Workshop",
-    type: 'tutorial',
+    type: 'history',
     artist: 'Otani',
     era: 'Contemporary Art',
     difficulty: 2,
-    premium: false,
     videoId: 'jLzpsJSHfbk',
     videoFile: null,
     // Video confirmed on the channel, but its transcript hasn't been pulled
     // yet, so `materials` / `steps` are left out rather than guessed.
     description:
-      'Design your own friendly monster character in this playful, imagination-first workshop.',
+      "Explore Otani's imaginative monster sculptures and their blend of old and new.",
   },
 
   // ---------------------------------------------------------------- Arcimboldo
@@ -650,7 +625,6 @@ const LESSONS = [
     artist: 'Giuseppe Arcimboldo',
     era: 'Mannerism (Renaissance)',
     difficulty: 2,
-    premium: false,
     videoId: 'U3bUXXyRU-k',
     description:
       'Meet the Renaissance painter who built portraits entirely out of fruits, vegetables, and flowers.',
@@ -666,7 +640,6 @@ const LESSONS = [
     artist: 'Jean Dubuffet',
     era: 'Art Brut',
     difficulty: 2,
-    premium: false,
     videoId: 'pq2-u95lvU0',
     description:
       "Discover Jean Dubuffet's raw, scribbly, childlike style and why he celebrated 'outsider art.'",
@@ -680,7 +653,6 @@ const LESSONS = [
     artist: 'Jean Dubuffet',
     era: 'Art Brut',
     difficulty: 2,
-    premium: false,
     videoId: 'MOJIMh-GFL8',
     videoFile: null,
     duration: '6:59',
@@ -727,7 +699,6 @@ const LESSONS = [
     artist: 'Edvard Munch',
     era: 'Expressionism',
     difficulty: 2,
-    premium: false,
     videoId: 'SVGcTxX84cM',
     duration: '7:32',
     description:
@@ -744,7 +715,6 @@ const LESSONS = [
     artist: 'Paul Klee',
     era: 'Bauhaus & Abstract Art',
     difficulty: 2,
-    premium: false,
     videoId: 'PEZJStfluvg',
     duration: '7:50',
     description:
@@ -755,17 +725,16 @@ const LESSONS = [
   {
     id: 'klee-chorus-of-colors',
     title: 'A Grand Chorus of Colors and Lines',
-    type: 'tutorial',
+    type: 'history',
     artist: 'Paul Klee',
     era: 'Bauhaus & Abstract Art',
     difficulty: 3,
-    premium: false,
     videoId: 'Dc1IfqpqBNs',
     videoFile: null,
     // Video confirmed on the channel, but its transcript hasn't been pulled
     // yet, so `materials` / `steps` are left out rather than guessed.
     description:
-      'Build your own abstract composition of colorful shapes and lines, Klee-style.',
+      "Explore the colorful shapes and lines in Paul Klee's abstract compositions.",
   },
 
   // ---------------------------------------------------------------- Henri Rousseau
@@ -776,7 +745,6 @@ const LESSONS = [
     artist: 'Henri Rousseau',
     era: 'Post-Impressionism (Naive Art)',
     difficulty: 2,
-    premium: false,
     videoId: 'XoNKY0jMdCY',
     duration: '4:12',
     description:
@@ -793,7 +761,6 @@ const LESSONS = [
     artist: 'Georges Seurat',
     era: 'Pointillism (Neo-Impressionism)',
     difficulty: 3,
-    premium: true,
     videoId: 'xq64kn8nYPc',
     duration: '10:33',
     description:
@@ -808,7 +775,6 @@ const LESSONS = [
     artist: 'Georges Seurat',
     era: 'Pointillism (Neo-Impressionism)',
     difficulty: 3,
-    premium: false,
     videoId: 'JiwrDv97P-o',
     videoFile: null,
     duration: '11:54',
@@ -861,7 +827,6 @@ const LESSONS = [
     artist: 'Various Contemporary Artists',
     era: 'Contemporary Art',
     difficulty: 2,
-    premium: true,
     videoId: 'AVUrxDwafmE',
     duration: '9:34',
     description:
@@ -878,7 +843,6 @@ const LESSONS = [
     artist: 'Friedensreich Hundertwasser',
     era: 'Contemporary Architecture & Art',
     difficulty: 2,
-    premium: false,
     videoId: 'VqBPWwV7XM0',
     duration: '8:40',
     description:
@@ -895,7 +859,6 @@ const LESSONS = [
     artist: 'Huang Yongyu',
     era: 'Chinese Contemporary Ink Painting',
     difficulty: 3,
-    premium: false,
     videoId: 'hqb0RYV0jpQ',
     description:
       "Meet Huang Yongyu, celebrated for his free-spirited ink paintings of lotus flowers.",
@@ -911,7 +874,6 @@ const LESSONS = [
     artist: 'Takashi Murakami',
     era: 'Contemporary Art (Superflat)',
     difficulty: 2,
-    premium: false,
     videoId: 'YIbWfdXgsaU',
     description:
       "Discover Takashi Murakami's smiling flowers and colorful 'Superflat' art style from Japan.",
@@ -925,7 +887,6 @@ const LESSONS = [
     artist: 'Takashi Murakami',
     era: 'Contemporary Art (Superflat)',
     difficulty: 3,
-    premium: false,
     videoId: 'z3qqozRSfM4',
     videoFile: null,
     duration: '8:44',
@@ -979,7 +940,6 @@ const LESSONS = [
     artist: 'Salvador Dalí',
     era: 'Surrealism',
     difficulty: 3,
-    premium: true,
     videoId: 'o9G4alVU628',
     duration: '11:54',
     description:
@@ -996,7 +956,6 @@ const LESSONS = [
     artist: 'Leonardo da Vinci',
     era: 'Renaissance',
     difficulty: 2,
-    premium: false,
     videoId: 'TPVvS4ICOSg',
     duration: '6:42',
     description:
@@ -1005,7 +964,7 @@ const LESSONS = [
       'Leonardo da Vinci worked on the Mona Lisa for years and reportedly kept it with him until he died — it never actually went to the person who supposedly commissioned it.',
   },
 
-  // ---------------------------------------------------------------- Geography of Art series (premium)
+  // ---------------------------------------------------------------- Geography of Art series
   {
     id: 'geography-of-art-ep1-florence',
     title: 'The Geography of Art Ep. 1 — Florence and the Renaissance',
@@ -1013,7 +972,6 @@ const LESSONS = [
     artist: 'Various Renaissance Masters',
     era: 'Renaissance',
     difficulty: 3,
-    premium: true,
     videoId: 'IVG065hJQ-c',
     duration: '10:14',
     description:
@@ -1028,7 +986,6 @@ const LESSONS = [
     artist: 'Various Renaissance Masters',
     era: 'Renaissance',
     difficulty: 3,
-    premium: true,
     videoId: 'BY1dIs4tTJo',
     duration: '8:21',
     description:
@@ -1043,7 +1000,6 @@ const LESSONS = [
     artist: 'Various Renaissance Masters',
     era: 'Renaissance',
     difficulty: 3,
-    premium: true,
     videoId: 'xMzmHsztxNo',
     duration: '10:47',
     description:
@@ -1060,7 +1016,6 @@ const LESSONS = [
     artist: 'Paul Cézanne',
     era: 'Post-Impressionism',
     difficulty: 2,
-    premium: false,
     videoId: '6ZWQcmpqoSU',
     description:
       'See how Paul Cézanne turned a simple bowl of apples into the foundation of modern art.',
@@ -1076,7 +1031,6 @@ const LESSONS = [
     artist: 'Wang Ximeng',
     era: 'Chinese Classical Painting (Song Dynasty)',
     difficulty: 3,
-    premium: true,
     videoId: 'h2aLQGgeh9c',
     description:
       'An extensive look at one of the greatest scroll paintings in Chinese art history.',
@@ -1090,7 +1044,6 @@ const LESSONS = [
     artist: 'Liu Guosong',
     era: 'Chinese Modern Ink Painting',
     difficulty: 3,
-    premium: false,
     videoId: 'qFnIy1faZoY',
     duration: '9:00',
     description:
@@ -1107,7 +1060,6 @@ const LESSONS = [
     artist: 'Keith Haring',
     era: 'Street Art & Pop Art',
     difficulty: 1,
-    premium: false,
     videoId: '8292QUz-KGM',
     duration: '8:05',
     description:
@@ -1122,7 +1074,6 @@ const LESSONS = [
     artist: 'Keith Haring',
     era: 'Street Art & Pop Art',
     difficulty: 3,
-    premium: false,
     videoId: 'Ro-Hi1_YgIM',
     videoFile: null,
     duration: '8:41',
@@ -1175,7 +1126,6 @@ const LESSONS = [
     artist: 'Johannes Vermeer',
     era: 'Dutch Golden Age (Baroque)',
     difficulty: 3,
-    premium: true,
     videoId: 'ug3CkJ8AtgI',
     duration: '7:19',
     description:

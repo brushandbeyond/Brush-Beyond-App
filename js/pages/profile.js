@@ -31,8 +31,7 @@ function renderProfile(root) {
 
     root.querySelector('#profile-create-btn').addEventListener('click', () => {
       const nickname = root.querySelector('#profile-nickname').value;
-      createProfile(nickname, selectedAvatar);
-      drawProfileView();
+      if (createProfile(nickname, selectedAvatar)) drawProfileView();
     });
   }
 
@@ -42,7 +41,7 @@ function renderProfile(root) {
 
     root.innerHTML = `
       <section class="page-header page-header--profile">
-        <h1>${avatarHTML(profile.avatar, 'profile-header-avatar')} ${profile.nickname}'s Art Journey</h1>
+        <h1>${avatarHTML(profile.avatar, 'profile-header-avatar')} ${escapeHTML(profile.nickname)}'s Art Journey</h1>
         <p>${profile.badges.length} of ${total} badges collected</p>
       </section>
 
@@ -80,12 +79,20 @@ function renderProfile(root) {
         }).join('')}
       </div>
 
-      <button type="button" class="link-btn" id="profile-reset-btn">Not you? Create a new profile</button>
+      <button type="button" class="link-btn" id="profile-reset-btn">Delete profile and progress</button>
     `;
 
     root.querySelector('#profile-reset-btn').addEventListener('click', () => {
-      resetProfile();
-      drawCreateForm();
+      showModal({
+        icon: '🗑️',
+        title: 'Delete your local profile?',
+        body: 'This permanently deletes your nickname, badges, and saved progress on this device. It cannot be undone.',
+        primaryLabel: 'Delete Profile',
+        onPrimary: () => {
+          if (resetProfile()) drawCreateForm();
+        },
+        secondaryLabel: 'Keep My Profile',
+      });
     });
   }
 

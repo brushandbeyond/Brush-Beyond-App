@@ -3,21 +3,11 @@ function embedHTML(videoId, title) {
     return `
       <div class="video-frame video-frame--placeholder">
         <span>🎬</span>
-        <p>Video coming soon! Check the <a href="https://www.youtube.com/@Brush-And-Beyond-2025" target="_blank" rel="noopener">Brush &amp; Beyond YouTube channel</a> in the meantime.</p>
+        <p>This video is not available. Ask a parent for help in <a href="#/parents">Parents &amp; carers</a>.</p>
       </div>
     `;
   }
-  return `
-    <div class="video-frame">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/${videoId}"
-        title="${title}"
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
-  `;
+  return playerCoverHTML(videoId, title);
 }
 
 // A clip you've uploaded yourself (tutorials & milestone celebrations only —
@@ -43,29 +33,19 @@ function stepVideoHTML(step, title) {
     return `
       <div class="video-frame video-frame--placeholder video-frame--step">
         <span>🎬</span>
-        <p>This step's clip hasn't been added yet — follow the written instructions below in the meantime!</p>
+        <p>Follow the written instructions below. You can also watch the full tutorial above.</p>
       </div>
     `;
   }
   return embedHTML(step.videoId, title);
 }
 
-function lockedHTML() {
-  return `
-    <div class="video-frame video-frame--locked">
-      <span>🔒</span>
-      <p>This is one of our extensive, deep-dive <strong>Premium</strong> lessons.</p>
-      <a class="btn btn--premium" href="#/premium">✨ Unlock with Premium</a>
-    </div>
-  `;
-}
-
 function accountGateHTML() {
   return `
     <div class="video-frame video-frame--locked">
       <span>🔒</span>
-      <p>Create an account to continue — it's how we save your progress and badges!</p>
-      <a class="btn btn--tutorial" href="#/profile">🎨 Create an Account</a>
+      <p>Create a local profile to save your progress and badges on this device. No email or password needed.</p>
+      <a class="btn btn--tutorial" href="#/profile">🎨 Create a Local Profile</a>
     </div>
   `;
 }
@@ -101,7 +81,8 @@ function completionHTML(lessonId) {
   }
   return `
     <div class="completion">
-      <button type="button" class="btn btn--tutorial" id="claim-badge-btn">Claim My Badge!</button>
+      <p id="badge-requirement">${hasCompletedLessonVideo(lessonId) ? 'Video completed — your badge is ready!' : 'Watch the full lesson video to unlock your badge.'}</p>
+      <button type="button" class="btn btn--tutorial" id="claim-badge-btn" ${hasCompletedLessonVideo(lessonId) ? '' : 'disabled'}>Claim My Badge!</button>
     </div>
   `;
 }
@@ -109,7 +90,14 @@ function completionHTML(lessonId) {
 function wireCompletionButton(container, lessonId, onEarned) {
   const btn = container.querySelector('#claim-badge-btn');
   if (!btn) return;
+  const updateCompletion = () => {
+    btn.disabled = !hasCompletedLessonVideo(lessonId);
+    const message = container.querySelector('#badge-requirement');
+    if (message && !btn.disabled) message.textContent = 'Video completed — your badge is ready!';
+  };
+  updateCompletion();
   btn.addEventListener('click', () => {
+    if (!hasCompletedLessonVideo(lessonId)) return;
     const justEarned = earnBadge(lessonId);
     if (justEarned) showToast('🏅 Badge earned! Nice work.');
     onEarned();
@@ -118,9 +106,9 @@ function wireCompletionButton(container, lessonId, onEarned) {
     if (milestone) {
       showModal({
         icon: milestone.icon,
-        title: `${milestone.count} lessons — ${milestone.title}!`,
-        body: `${milestone.description} Want to watch a special congratulations video?`,
-        primaryLabel: '🎬 Watch My Video!',
+        title: `${milestone.count} lesson${milestone.count === 1 ? '' : 's'} — ${milestone.title}!`,
+        body: `${milestone.description} Celebrate your progress!`,
+        primaryLabel: 'View My Milestone',
         onPrimary: () => navigate(`/celebrate/${milestone.count}`),
         secondaryLabel: 'Maybe Later',
       });
@@ -136,7 +124,7 @@ function renderStepper(container, lesson) {
   const lastLesson = getLastLesson();
   let currentIndex =
     lastLesson && lastLesson.id === lesson.id
-      ? Math.min(lastLesson.stepIndex, steps.length - 1)
+      ? Math.max(0, Math.min(lastLesson.stepIndex, steps.length - 1))
       : 0;
 
   function draw() {
@@ -146,6 +134,10 @@ function renderStepper(container, lesson) {
     setLastLesson(lesson.id, currentIndex);
 
     container.innerHTML = `
+      <details class="tutorial-full-video">
+        <summary>Watch the full tutorial</summary>
+        ${tutorialVideoHTML(lesson.videoFile, lesson.videoId, lesson.title)}
+      </details>
       ${lesson.materials ? materialsHTML(lesson.materials) : ''}
       <div class="stepper">
         <div class="stepper__progress">
@@ -195,6 +187,13 @@ function renderStepper(container, lesson) {
     if (isLast) {
       wireCompletionButton(container, lesson.id, draw);
     }
+    wireLessonMedia(container, lesson, () => {
+      const button = container.querySelector('#claim-badge-btn');
+      if (button) {
+        button.disabled = false;
+        container.querySelector('#badge-requirement').textContent = 'Video completed — your badge is ready!';
+      }
+    });
   }
 
   draw();
@@ -210,7 +209,6 @@ function renderLessonDetail(root, { id }) {
 
   const backHref = lesson.type === 'tutorial' ? '#/tutorials' : '#/history';
   const backLabel = lesson.type === 'tutorial' ? '← Back to Art Tutorials' : '← Back to Art History';
-  const locked = lesson.premium && !isPremium();
 
   root.innerHTML = `
     <section class="lesson-detail">
@@ -218,7 +216,6 @@ function renderLessonDetail(root, { id }) {
 
       <div class="lesson-detail__badges">
         ${typeBadgeHTML(lesson.type)}
-        ${lesson.premium ? premiumBadgeHTML() : ''}
       </div>
 
       <h1>${lesson.title}</h1>
@@ -238,11 +235,6 @@ function renderLessonDetail(root, { id }) {
     return;
   }
 
-  if (locked) {
-    bodyMount.innerHTML = lockedHTML();
-    return;
-  }
-
   if (lesson.steps && lesson.steps.length > 0) {
     renderStepper(bodyMount, lesson);
   } else {
@@ -258,6 +250,14 @@ function renderLessonDetail(root, { id }) {
         ${completionHTML(lesson.id)}
       `;
       wireCompletionButton(bodyMount, lesson.id, drawSingle);
+      wireLessonMedia(bodyMount, lesson, () => {
+        const button = bodyMount.querySelector('#claim-badge-btn');
+        if (button) {
+          button.disabled = false;
+          const message = bodyMount.querySelector('#badge-requirement');
+          if (message) message.textContent = 'Video completed — your badge is ready!';
+        }
+      });
     }
     drawSingle();
   }

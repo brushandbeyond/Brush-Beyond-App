@@ -1,7 +1,6 @@
 // Local, no-login "profile" — a nickname + avatar saved only on this device
-// via localStorage. No email, no password, no server: nothing personal is
-// ever collected, so there's nothing to worry about re: kids' privacy law
-// (COPPA) here. Progress does NOT follow a kid to a different device or
+// via localStorage. No email, no password, no server. Progress does NOT
+// follow a kid to a different device or
 // browser — if you outgrow that, see the README note on real accounts.
 
 const PROFILE_KEY = 'bb_profile';
@@ -19,8 +18,9 @@ function isImageAvatar(avatar) {
 // span, so every place that shows an avatar looks right either way.
 // `className` also gets sized/styled per call site in css/styles.css.
 function avatarHTML(avatar, className) {
+  avatar = AVATARS.includes(avatar) ? avatar : AVATARS[0];
   if (isImageAvatar(avatar)) {
-    return `<img class="${className} avatar-img" src="${avatar}" alt="" />`;
+    return `<img class="${className} avatar-img" src="${escapeHTML(avatar)}" alt="" />`;
   }
   return `<span class="${className}">${avatar}</span>`;
 }
@@ -28,7 +28,28 @@ function avatarHTML(avatar, className) {
 function getProfile() {
   try {
     const raw = localStorage.getItem(PROFILE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const profile = JSON.parse(raw);
+    if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return null;
+    if (typeof profile.nickname !== 'string') return null;
+    const lessonIds = new Set(LESSONS.map((lesson) => lesson.id));
+    const badges = Array.isArray(profile.badges) ? profile.badges : [];
+    const milestones = Array.isArray(profile.seenMilestones) ? profile.seenMilestones : [];
+    const last = profile.lastLesson;
+    return {
+      nickname: profile.nickname.trim().slice(0, 20) || 'Artist',
+      avatar: AVATARS.includes(profile.avatar) ? profile.avatar : AVATARS[0],
+      badges: [...new Set(badges.filter((id) => lessonIds.has(id)))],
+      seenMilestones: [...new Set(milestones.filter((count) => Number.isInteger(count) && count > 0))],
+      createdAt: typeof profile.createdAt === 'string' ? profile.createdAt : null,
+      watchedVideos: profile.watchedVideos && typeof profile.watchedVideos === 'object' && !Array.isArray(profile.watchedVideos)
+        ? Object.fromEntries(Object.entries(profile.watchedVideos).filter(([id, complete]) => lessonIds.has(id) && complete === true))
+        : {},
+      lastLesson: last && lessonIds.has(last.id) ? {
+        id: last.id,
+        stepIndex: Number.isInteger(last.stepIndex) && last.stepIndex >= 0 ? last.stepIndex : 0,
+      } : null,
+    };
   } catch {
     return null;
   }
@@ -40,24 +61,37 @@ function hasProfile() {
 
 function createProfile(nickname, avatar) {
   const profile = {
-    nickname: (nickname || 'Artist').trim().slice(0, 20),
-    avatar: avatar || AVATARS[0],
+    nickname: (nickname || '').trim().slice(0, 20) || 'Artist',
+    avatar: AVATARS.includes(avatar) ? avatar : AVATARS[0],
     badges: [],
     seenMilestones: [],
+    watchedVideos: {},
     createdAt: new Date().toISOString(),
   };
-  saveProfile(profile);
-  return profile;
+  return saveProfile(profile) ? profile : null;
 }
 
 function saveProfile(profile) {
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  try {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  } catch {
+    showToast('Your progress could not be saved. Please check that device storage is available.');
+    return false;
+  }
   window.dispatchEvent(new CustomEvent('bb:profile-changed', { detail: profile }));
+  return true;
 }
 
 function resetProfile() {
-  localStorage.removeItem(PROFILE_KEY);
+  try {
+    localStorage.removeItem(PROFILE_KEY);
+    localStorage.removeItem('bb_premium_demo');
+  } catch {
+    showToast('Your profile could not be deleted. Please check your device storage settings.');
+    return false;
+  }
   window.dispatchEvent(new CustomEvent('bb:profile-changed', { detail: null }));
+  return true;
 }
 
 function hasBadge(lessonId) {
@@ -69,10 +103,21 @@ function hasBadge(lessonId) {
 // false if they already had it or have no profile yet.
 function earnBadge(lessonId) {
   const profile = getProfile();
-  if (!profile || profile.badges.includes(lessonId)) return false;
+  if (!profile || !hasCompletedLessonVideo(lessonId) || profile.badges.includes(lessonId)) return false;
   profile.badges.push(lessonId);
-  saveProfile(profile);
-  return true;
+  return saveProfile(profile);
+}
+
+function hasCompletedLessonVideo(lessonId) {
+  const profile = getProfile();
+  return !!profile && profile.watchedVideos[lessonId] === true;
+}
+
+function completeLessonVideo(lessonId) {
+  const profile = getProfile();
+  if (!profile || !getLessonById(lessonId)) return false;
+  profile.watchedVideos[lessonId] = true;
+  return saveProfile(profile);
 }
 
 // Powers the "Continue Watching" / "Continue Your Tutorial" card on the
@@ -110,7 +155,5 @@ function checkNewMilestone() {
   // that existed before this feature shipped) gets shown only its highest
   // milestone instead of a stacked run of popups for 1, 5, 10, etc.
   profile.seenMilestones.push(...newlyReached.map((m) => m.count));
-  saveProfile(profile);
-
-  return newlyReached[newlyReached.length - 1];
+  return saveProfile(profile) ? newlyReached[newlyReached.length - 1] : null;
 }

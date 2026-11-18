@@ -13,5 +13,5 @@ const MILESTONES = [
   { count: 5, icon: '🎨', title: 'Getting Creative', description: 'Completed 5 lessons.', videoFile: null, videoId: null },
   { count: 10, icon: '🏆', title: 'Art Enthusiast', description: 'Completed 10 lessons.', videoFile: null, videoId: null },
   { count: 20, icon: '👑', title: 'Art Master', description: 'Completed 20 lessons.', videoFile: null, videoId: null },
-  { count: 50, icon: '💎', title: 'Art Legend', description: 'Completed 50 lessons.', videoFile: null, videoId: null },
+  { count: 40, icon: '💎', title: 'Art Legend', description: 'Completed 40 lessons.', videoFile: null, videoId: null },
 ];
