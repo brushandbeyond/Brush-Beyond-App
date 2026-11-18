@@ -3,7 +3,7 @@
 Status: Release archive uploaded successfully to App Store Connect for TestFlight; Apple processing started. Tester access and beta review are not yet verified. Not published to the App Store.
 Updated November 18, 2026.
 
-**November 18, 2026: version 1.0 (build 3) submitted for App Review via API (`scripts/app-store-submit.js`), submission `e061362b-4654-427f-822a-778ed04af03f`, state WAITING_FOR_REVIEW. App Privacy published by owner (Advertising Data → Third-Party Advertising, not linked, not tracking). Manual release: after approval run `node scripts/app-store-submit.js release --confirm`.**
+**November 18, 2026: version 1.0 (build 3) submitted for App Review via API (`scripts/app-store-submit.js`), submission `e061362b-4654-427f-822a-778ed04af03f`, state WAITING_FOR_REVIEW. App Privacy published by owner (Advertising Data → Third-Party Advertising, not linked, not tracking). Manual release: after approval run `node scripts/app-store-submit.js release --confirm`. Owner confirmed build 1.0 (3) works in TestFlight on iPhone and all lesson videos are set to Made for Kids in YouTube Studio (Nov 18).**
 
 ## Current TestFlight attempt — November 7, 2026
 
