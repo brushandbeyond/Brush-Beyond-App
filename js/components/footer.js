@@ -3,9 +3,9 @@ function renderFooter(container) {
     <footer class="site-footer">
       <p>Brush &amp; Beyond is a 501(c)(3) nonprofit sparking creativity through free art education.</p>
       <p class="site-footer__links">
-        <a href="https://brushbeyond.net" target="_blank" rel="noopener">brushbeyond.net</a>
+        <a href="#/privacy">Privacy &amp; Help</a>
         ·
-        <a href="https://www.youtube.com/@Brush-And-Beyond-2025" target="_blank" rel="noopener">YouTube Channel</a>
+        <a href="#/parents">Parents &amp; carers</a>
       </p>
     </footer>
   `;

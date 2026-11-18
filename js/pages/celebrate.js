@@ -5,7 +5,7 @@ function renderCelebrate(root, { count }) {
   const milestone = MILESTONES.find((m) => String(m.count) === String(count));
   const profile = getProfile();
 
-  if (!milestone) {
+  if (!milestone || !profile || profile.badges.length < milestone.count) {
     root.innerHTML = `<div class="not-found"><h2>We couldn't find that celebration.</h2><a href="#/profile">Back to your profile</a></div>`;
     return;
   }
@@ -17,14 +17,14 @@ function renderCelebrate(root, { count }) {
       : `
         <div class="video-frame video-frame--placeholder">
           <span>🎬</span>
-          <p>A congratulations video is coming soon for this milestone! In the meantime — take a bow, you earned it.</p>
+          <p>You've reached a new milestone. Take a bow, you earned it!</p>
         </div>
       `;
 
   root.innerHTML = `
     <section class="lesson-detail celebrate-page">
       <div class="celebrate-page__confetti">🎉🎨🎉</div>
-      <h1>Way to go${profile ? `, ${profile.nickname}` : ''}!</h1>
+      <h1>Way to go${profile ? `, ${escapeHTML(profile.nickname)}` : ''}!</h1>
       <p class="lesson-detail__description">
         <strong>${milestone.icon} ${milestone.title}</strong> — ${milestone.description}
       </p>
@@ -32,4 +32,5 @@ function renderCelebrate(root, { count }) {
       <a class="btn btn--tutorial" href="#/profile">🏅 Back to My Profile</a>
     </section>
   `;
+  wireLessonMedia(root, { id: null, videoId: milestone.videoId }, () => {});
 }

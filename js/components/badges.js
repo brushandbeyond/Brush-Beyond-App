@@ -15,10 +15,6 @@ function difficultyBadgeHTML(level) {
   `;
 }
 
-function premiumBadgeHTML() {
-  return `<span class="premium-badge">✨ Premium</span>`;
-}
-
 function typeBadgeHTML(type) {
   return type === 'tutorial'
     ? `<span class="type-badge type-tutorial">🎨 Tutorial</span>`

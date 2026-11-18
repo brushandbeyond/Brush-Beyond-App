@@ -1,11 +1,12 @@
 {
   "name": "bb-app",
   "version": "1.0.0",
-  "description": "A kid-friendly learning platform for Brush & Beyond's art history lessons and step-by-step art tutorials, with filtering by era, artist, and difficulty, and a Premium tier for extensive deep-dive history episodes.",
+  "description": "Free art history lessons and step-by-step art tutorials from Brush & Beyond, with local profiles, progress, and badges.",
   "main": "index.js",
   "scripts": {
+    "check:release": "node scripts/check-release.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sync": "rm -rf www && mkdir -p www && cp -R index.html css js assets www/",
+    "sync": "rm -rf www && mkdir -p www && cp -R index.html privacy.html css js assets www/",
     "cap:sync": "npm run sync && npx cap sync"
   },
   "keywords": [],
@@ -13,9 +14,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@capacitor/android": "^8.5.3",
-    "@capacitor/cli": "^8.5.1",
-    "@capacitor/core": "^8.5.1",
-    "@capacitor/ios": "^8.5.1"
+    "@capacitor/android": "8.5.3",
+    "@capacitor/cli": "8.5.3",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/ios": "8.5.3"
   }
 }

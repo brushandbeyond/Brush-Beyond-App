@@ -2,7 +2,7 @@ const COPY = {
   history: {
     title: '🏛 Art History',
     intro:
-      'Meet the artists and movements that shaped art as we know it. Look for the ✨ Premium badge for our most extensive, deep-dive episodes.',
+      'Meet the artists and movements that shaped art as we know it. Explore every lesson for free, including our extensive, deep-dive episodes.',
   },
   tutorial: {
     title: '🎨 Art Tutorials',
@@ -16,9 +16,8 @@ const COPY = {
 };
 
 function renderExplore(root, { lockType = 'all' } = {}) {
-  const scoped = lockType === 'all' ? LESSONS : LESSONS.filter((l) => l.type === lockType);
-  const eras = [...new Set(scoped.map((l) => l.era))].sort();
-  const artists = [...new Set(scoped.map((l) => l.artist))].sort();
+  const eras = getUniqueValues('era');
+  const artists = getUniqueValues('artist');
   const copy = COPY[lockType];
 
   root.innerHTML = `
@@ -38,10 +37,11 @@ function renderExplore(root, { lockType = 'all' } = {}) {
     eras,
     artists,
     initialType: lockType,
-    showTypeChips: lockType === 'all',
+    showTypeChips: true,
     onChange: (filters) => {
-      const effectiveFilters = lockType === 'all' ? filters : { ...filters, type: lockType };
-      const filtered = applyFilters(scoped, effectiveFilters);
+      root.querySelector('.page-header h1').textContent = COPY[filters.type].title;
+      root.querySelector('.page-header p').textContent = COPY[filters.type].intro;
+      const filtered = applyFilters(LESSONS, filters);
       gridMount.innerHTML = lessonGridHTML(filtered);
     },
   });

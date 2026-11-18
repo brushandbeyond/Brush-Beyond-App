@@ -26,8 +26,28 @@
   --radius-md: 18px;
   --radius-sm: 12px;
   --shadow-soft: 0 10px 30px rgba(59, 76, 202, 0.12);
-  --font-display: 'PT Serif', system-ui, sans-serif;
-  --font-body: 'Ibarra Real Nova', system-ui, serif;
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body: Georgia, 'Times New Roman', serif;
+}
+
+.tutorial-full-video {
+  margin: 20px 0;
+}
+
+.video-frame--cover { position: relative; min-height: 200px; }
+.video-frame--cover > img { width: 100%; height: 100%; object-fit: cover; }
+.video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#claim-badge-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.tutorial-full-video summary {
+  cursor: pointer;
+  padding: 12px 0;
+  font-weight: 700;
+}
+
+:focus-visible {
+  outline: 3px solid var(--bb-blue-deep);
+  outline-offset: 3px;
 }
 
 * {
@@ -87,6 +107,19 @@ img, iframe {
 }
 
 .header-left { justify-self: start; }
+.app-back-btn {
+  min-width: 80px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 24px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.app-back-btn:disabled { opacity: 0.4; cursor: default; }
+.app-back-btn:focus-visible { outline: 3px solid #438fc4; outline-offset: 3px; }
 .header-right { justify-self: end; }
 
 .brand {

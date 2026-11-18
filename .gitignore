@@ -14,6 +14,8 @@ npm-debug.log*
 # Environment / secrets
 .env
 .env.*
+*.p8
+.local-credentials/
 
 # Editor
 .vscode/
@@ -21,3 +23,7 @@ npm-debug.log*
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Regenerable store pack (scripts/package-store-assets.sh) and separate help-site checkout
+release/*.zip
+release-site/

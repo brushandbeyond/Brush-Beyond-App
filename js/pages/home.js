@@ -14,7 +14,6 @@ const STATS = {
 // Read live from GitHub so the iOS app picks up new numbers without an App
 // Store update; the bundled copy is the backup if GitHub is unreachable.
 const YOUTUBE_STATS_URLS = [
-  'https://raw.githubusercontent.com/brushandbeyond/Brush-Beyond-App/main/js/data/youtube-stats.json',
   'js/data/youtube-stats.json',
 ];
 
@@ -69,7 +68,7 @@ function profileBannerHTML() {
     <a class="profile-banner" href="#/profile">
       ${avatarHTML(profile.avatar, 'profile-banner__icon')}
       <span>
-        <strong>Welcome back, ${profile.nickname}!</strong>
+        <strong>Welcome back, ${escapeHTML(profile.nickname)}!</strong>
         <span class="profile-banner__sub">You've earned ${profile.badges.length} badge${profile.badges.length === 1 ? '' : 's'} — keep going!</span>
       </span>
     </a>
@@ -86,11 +85,10 @@ function continueWatchingHTML() {
   const lesson = getLessonById(last.id);
   if (!lesson) return '';
   if (hasBadge(lesson.id)) return ''; // already finished — nothing to continue
-  if (lesson.premium && !isPremium()) return ''; // no longer accessible
 
   const thumb =
     lesson.thumbnail ||
-    (lesson.videoId ? `https://img.youtube.com/vi/${lesson.videoId}/mqdefault.jpg` : null);
+    (lesson.videoId ? `assets/thumbnails/${lesson.videoId}.jpg` : null);
   const isTutorial = lesson.type === 'tutorial' && lesson.steps && lesson.steps.length > 0;
   const label = isTutorial ? '▶ Continue Your Tutorial' : '▶ Continue Watching';
   const subtitle = isTutorial
@@ -123,11 +121,14 @@ function maybeShowContinueWatchingPopup() {
   const lesson = getLessonById(last.id);
   if (!lesson) return;
   if (hasBadge(lesson.id)) return;
-  if (lesson.premium && !isPremium()) return;
 
   const seenKey = `bb_continue_popup_seen_${last.id}`;
-  if (sessionStorage.getItem(seenKey)) return;
-  sessionStorage.setItem(seenKey, '1');
+  try {
+    if (sessionStorage.getItem(seenKey)) return;
+    sessionStorage.setItem(seenKey, '1');
+  } catch {
+    return;
+  }
 
   const isTutorial = lesson.type === 'tutorial' && lesson.steps && lesson.steps.length > 0;
   const body = isTutorial
@@ -166,7 +167,7 @@ function renderHome(root) {
             ? ''
             : `
               <div class="hero__ctas">
-                <a class="btn btn--tutorial" href="#/profile">🎨 Create an Account to Continue</a>
+                <a class="btn btn--tutorial" href="#/profile">🎨 Create a Local Profile</a>
               </div>
             `
         }
@@ -198,7 +199,7 @@ function renderHome(root) {
       <a class="big-card big-card--history" href="#/history">
         <span class="big-card__icon">🏛</span>
         <h2>Art History</h2>
-        <p>Meet the artists, movements, and stories behind famous works. In-depth, Premium deep-dives are available for the extra curious.</p>
+        <p>Meet the artists, movements, and stories behind famous works. Explore in-depth lessons for the extra curious, all free.</p>
         <span class="big-card__count">${historyCount} lessons</span>
       </a>
       <a class="big-card big-card--tutorial" href="#/tutorials">

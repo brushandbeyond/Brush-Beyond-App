@@ -1,18 +1,17 @@
 // Renders the filter bar into `container` and calls `onChange(filters)`
 // every time a control changes. `filters` shape:
 //   { type: 'all'|'history'|'tutorial', era: 'all'|string,
-//     artist: 'all'|string, difficulties: Set<number>, premiumOnly: boolean }
+//     artist: 'all'|string, difficulties: Set<number> }
 function renderFilterBar({ container, eras, artists, initialType = 'all', showTypeChips = true, onChange }) {
   const state = {
     type: initialType,
     era: 'all',
     artist: 'all',
     difficulties: new Set(),
-    premiumOnly: false,
   };
 
-  const eraOptions = eras.map((e) => `<option value="${e}">${e}</option>`).join('');
-  const artistOptions = artists.map((a) => `<option value="${a}">${a}</option>`).join('');
+  const eraOptions = eras.map((era) => `<option value="${escapeHTML(era)}">${escapeHTML(era)}</option>`).join('');
+  const artistOptions = artists.map((artist) => `<option value="${escapeHTML(artist)}">${escapeHTML(artist)}</option>`).join('');
 
   container.innerHTML = `
     <div class="filter-bar">
@@ -49,11 +48,6 @@ function renderFilterBar({ container, eras, artists, initialType = 'all', showTy
         </div>
       </div>
 
-      <label class="filter-group filter-group--premium">
-        <input type="checkbox" id="filter-premium" />
-        ✨ Premium only
-      </label>
-
       <button type="button" class="link-btn" id="filter-reset">Reset filters</button>
     </div>
   `;
@@ -62,11 +56,18 @@ function renderFilterBar({ container, eras, artists, initialType = 'all', showTy
   const eraSelect = container.querySelector('#filter-era');
   const artistSelect = container.querySelector('#filter-artist');
   const diffChips = container.querySelectorAll('[data-diff]');
-  const premiumCheckbox = container.querySelector('#filter-premium');
   const resetBtn = container.querySelector('#filter-reset');
 
   function syncTypeChips() {
     typeChips.forEach((chip) => chip.classList.toggle('is-active', chip.dataset.type === state.type));
+    diffChips.forEach((chip) => {
+      const level = Number(chip.dataset.diff);
+      const available = LESSONS.some((lesson) => (state.type === 'all' || lesson.type === state.type) && lesson.difficulty === level);
+      chip.disabled = !available;
+      chip.title = available ? DIFFICULTY_LEVELS.find((difficulty) => difficulty.level === level).blurb : 'No lessons at this difficulty for this lesson type yet.';
+      if (!available) state.difficulties.delete(level);
+    });
+    syncDiffChips();
   }
   function syncDiffChips() {
     diffChips.forEach((chip) =>
@@ -102,20 +103,13 @@ function renderFilterBar({ container, eras, artists, initialType = 'all', showTy
     });
   });
 
-  premiumCheckbox.addEventListener('change', () => {
-    state.premiumOnly = premiumCheckbox.checked;
-    onChange({ ...state, difficulties: new Set(state.difficulties) });
-  });
-
   resetBtn.addEventListener('click', () => {
     state.type = initialType;
     state.era = 'all';
     state.artist = 'all';
     state.difficulties.clear();
-    state.premiumOnly = false;
     eraSelect.value = 'all';
     artistSelect.value = 'all';
-    premiumCheckbox.checked = false;
     syncTypeChips();
     syncDiffChips();
     onChange({ ...state, difficulties: new Set(state.difficulties) });
@@ -132,7 +126,6 @@ function applyFilters(lessons, filters) {
     if (filters.era !== 'all' && l.era !== filters.era) return false;
     if (filters.artist !== 'all' && l.artist !== filters.artist) return false;
     if (filters.difficulties.size > 0 && !filters.difficulties.has(l.difficulty)) return false;
-    if (filters.premiumOnly && !l.premium) return false;
     return true;
   });
 }
