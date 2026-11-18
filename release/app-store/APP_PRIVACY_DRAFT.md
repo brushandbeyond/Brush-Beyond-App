@@ -75,8 +75,8 @@ Rechecked App Store Connect: Advertising Data remains saved, “Set Up Advertisi
 | Advertising Data → Developer's Advertising or Marketing | Not supported by the inspected implementation | No own marketing-data pipeline found. Do not conflate ads supporting YouTube with the operator's own marketing. |
 | Advertising Data → Product Personalization | Not supported for the documented privacy-enhanced playback | Provider says embedded views do not personalize the YouTube experience; do not apply this statement to ordinary external YouTube destinations. |
 | Advertising Data → Analytics / App Functionality | Requires configuration-specific mapping | General service/fraud/measurement language is not a complete per-data-type purpose table. |
-| Advertising Data → Linked to user | Leave unresolved | Apple's linkage includes device identity, not just a named Google account. |
-| Advertising Data → Used for tracking | Leave unresolved | Need to distinguish aggregate reporting from joins involving third-party data before aggregation. |
+| Advertising Data → Linked to user | **No** (owner decision Nov 18, 2026) | Made for Kids + privacy-enhanced embed: non-personalized/contextual ads, no app account, no IDFA. |
+| Advertising Data → Used for tracking | **No** (owner decision Nov 18, 2026) | Google prohibits personalized targeting and third-party trackers on Made for Kids ads; app has no ATT/IDFA use. |
 | Name / User ID for the app's local nickname | Do not select solely for this feature | The nickname/profile is stored locally and not uploaded by our implementation. Provider identifiers remain a separate investigation. |
 | Photos or Videos for the lesson catalog | Do not select solely for this feature | Bundled/operator lesson content is not collection of the viewer's own media. |
 | Precise Location / Contacts / Health / Financial data | No own collection found | The app has no corresponding collection feature/API in the inspected implementation. Do not use this to certify all provider behavior. |
@@ -87,3 +87,7 @@ Rechecked App Store Connect: Advertising Data remains saved, “Set Up Advertisi
 - Apple submission and public release are separate; manual release does not establish Google registration eligibility. Registration is a separate Google requirement, not a documented Apple form field or an independently established prerequisite imposed by Apple.
 - A Kids-category contextual-ad suitability assessment remains necessary independently of the privacy-label questionnaire. Do not imply that published non-personalized-ad documentation alone guarantees Apple's acceptance.
 - No public privacy-page change, runtime/app-build change, privacy-label publication or Apple review submission was made in this follow-up.
+
+## November 18 owner decision
+
+Owner chose Advertising Data: Linked to user = No, Used for tracking = No, purpose = Third-Party Advertising only. Not yet entered in App Store Connect (no API exists for App Privacy; must be set in the web UI). After saving, Publish the label, then Add for Review.
